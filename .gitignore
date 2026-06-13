@@ -13,7 +13,7 @@ uploaded_video.mp4
 video_index.faiss
 metadata.json
 transcripts/*.json
-
+videos/
 
 # System files
 .DS_Store
