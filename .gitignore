@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+
+
+# Virtual environment
+venv/
+env/
+
+
+# Generated project files
+uploaded_video.mp4
+video_index.faiss
+metadata.json
+transcripts/*.json
+
+
+# System files
+.DS_Store

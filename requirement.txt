@@ -1,0 +1,4 @@
+First i have installed the pytorch : PyTorch is a Python-based deep learning library that runs on CPU by default and supports GPU acceleration using CUDA. It follows a define-by-run approach, creating dynamic computation graphs during execution, which makes debugging and customization easier.
+Uses dynamic graphs for flexibility
+Provides automatic differentiation for gradient computation
+Supports GPU acceleration with CUDA
