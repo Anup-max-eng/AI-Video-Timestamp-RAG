@@ -125,7 +125,6 @@ unsafe_allow_html=True
 
 
 
-
 # Sidebar
 
 with st.sidebar:
@@ -170,6 +169,8 @@ with st.sidebar:
 
 
 
+
+
         if st.button(
             "Process video"
         ):
@@ -185,16 +186,20 @@ with st.sidebar:
                 )
 
 
+
                 create_embeddings()
+
 
 
                 st.session_state.processed = True
 
 
 
+
             st.success(
                 "Ready"
             )
+
 
 
 
@@ -221,8 +226,6 @@ with st.sidebar:
 
 
 
-
-
 # Layout
 
 left, right = st.columns(
@@ -237,8 +240,7 @@ left, right = st.columns(
 
 
 
-
-# Video section
+# Video
 
 with left:
 
@@ -246,7 +248,6 @@ with left:
     st.subheader(
         "Video"
     )
-
 
 
     if os.path.exists(
@@ -258,7 +259,6 @@ with left:
             "uploaded_video.mp4",
             start_time=st.session_state.video_time
         )
-
 
 
     else:
@@ -276,7 +276,7 @@ with left:
 
 
 
-# Chat section
+# Chat
 
 with right:
 
@@ -318,7 +318,6 @@ with right:
 
 
 
-
         if question:
 
 
@@ -349,8 +348,6 @@ with right:
 
 
 
-
-
             st.session_state.messages.append(
                 (
                     "assistant",
@@ -365,7 +362,6 @@ with right:
 
 
             st.rerun()
-
 
 
 

@@ -1,5 +1,15 @@
 # RAG question answering file
 
+import faiss
+import json
+import numpy as np
+import streamlit as st
+
+from sentence_transformers import SentenceTransformer
+
+
+
+
 
 def format_time(seconds):
 
@@ -14,48 +24,56 @@ def format_time(seconds):
 
 
 
-def ask_question(question):
-
-
-    import faiss
-    import json
-    import numpy as np
-
-    from sentence_transformers import SentenceTransformer
 
 
 
+# Load embedding model only once
+
+@st.cache_resource
+def load_embedding_model():
 
 
-
-
-    # Load embedding model
-
-    embedding_model = SentenceTransformer(
+    model = SentenceTransformer(
         "all-MiniLM-L6-v2"
     )
 
 
+    return model
 
 
 
 
 
 
-    # Load FAISS database
+
+
+
+# Load FAISS only once
+
+@st.cache_resource
+def load_faiss_index():
+
 
     index = faiss.read_index(
         "video_index.faiss"
     )
 
 
+    return index
 
 
 
 
 
 
-    # Load timestamp metadata
+
+
+
+# Load metadata only once
+
+@st.cache_data
+def load_metadata():
+
 
     with open(
         "metadata.json",
@@ -69,6 +87,7 @@ def ask_question(question):
         )
 
 
+    return metadata
 
 
 
@@ -76,7 +95,29 @@ def ask_question(question):
 
 
 
-    # Convert question into vector
+
+
+
+
+
+def ask_question(question):
+
+
+    embedding_model = load_embedding_model()
+
+
+    index = load_faiss_index()
+
+
+    metadata = load_metadata()
+
+
+
+
+
+
+
+    # Convert question to vector
 
     question_vector = embedding_model.encode(
         [question]
@@ -95,9 +136,7 @@ def ask_question(question):
 
 
 
-
-
-    # Search FAISS
+    # FAISS similarity search
 
     distance, indexes = index.search(
         question_vector,
@@ -110,13 +149,10 @@ def ask_question(question):
 
 
 
-
-
-    # Prepare answer
-
     answer = ""
 
     timestamps = []
+
 
 
 
@@ -138,7 +174,6 @@ def ask_question(question):
 
         timestamps.append(
             (
-
                 format_time(
                     data["start"]
                 ),
@@ -147,12 +182,8 @@ def ask_question(question):
                 format_time(
                     data["end"]
                 )
-
             )
         )
-
-
-
 
 
 

@@ -7,6 +7,7 @@ def create_embeddings():
 
     import faiss
     import json
+    import pickle
 
     from sentence_transformers import SentenceTransformer
 
@@ -50,12 +51,10 @@ def create_embeddings():
 
 
 
-
     print(
         "Total text chunks:",
         len(texts)
     )
-
 
 
 
@@ -88,7 +87,6 @@ def create_embeddings():
 
 
 
-
     # Load embedding model
 
     print(
@@ -101,8 +99,30 @@ def create_embeddings():
     )
 
 
+
+
+
+
+
+    # Save embedding model
+    # So Streamlit RAG does not reload HuggingFace
+
+
+    with open(
+        "embedding_model.pkl",
+        "wb"
+    ) as file:
+
+
+        pickle.dump(
+            model,
+            file
+        )
+
+
+
     print(
-        "Embedding model loaded"
+        "Embedding model saved"
     )
 
 
@@ -113,7 +133,7 @@ def create_embeddings():
 
 
 
-    # Convert text into vectors
+    # Convert transcript text into vectors
 
     print(
         "Creating embeddings..."
@@ -123,8 +143,6 @@ def create_embeddings():
     embeddings = model.encode(
         texts
     )
-
-
 
 
 
@@ -141,9 +159,7 @@ def create_embeddings():
 
 
 
-
-
-    # Vector dimension
+    # Vector size
 
     dimension = embeddings.shape[1]
 
@@ -153,8 +169,7 @@ def create_embeddings():
 
 
 
-
-    # Create FAISS database
+    # Create FAISS index
 
     index = faiss.IndexFlatL2(
         dimension
@@ -165,9 +180,7 @@ def create_embeddings():
 
 
 
-
-
-    # Store vectors in FAISS
+    # Add vectors
 
     index.add(
         embeddings
@@ -179,9 +192,7 @@ def create_embeddings():
 
 
 
-
-
-    # Save FAISS index
+    # Save FAISS database
 
     faiss.write_index(
         index,
@@ -195,8 +206,7 @@ def create_embeddings():
 
 
 
-
-    # Save transcript + timestamps
+    # Save text + timestamps
 
     with open(
         "metadata.json",
@@ -216,12 +226,9 @@ def create_embeddings():
 
 
 
-
-
     print(
         "FAISS database saved"
     )
-
 
 
 
